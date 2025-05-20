@@ -2,3 +2,4 @@
 venv
 src/drug_graph_generator/__pycache__/
 output
+tests/__pycache__/
