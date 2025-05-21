@@ -80,7 +80,6 @@ The pipeline generates a single JSON file:
     ```bash
     pip install -r requirements.txt
     ```
-    (The `requirements.txt` should include `json5` and any other necessary libraries).
 
 ## Running the Pipeline
 
@@ -95,6 +94,12 @@ The script will:
 - Process the data to find drug mentions.
 - Generate the `drug_mentions_graph.json` file in the `output/` directory (this directory will be created if it doesn't exist).
 - Print progress messages to the console.
+
+
+Below is an example output for the pipeline (along with the adhoc queries).
+
+#### Pipeline Run Results
+![Pipeline Run Results](assets/run_log.png)
 
 # Data Quality Considerations & Handling
 
@@ -156,6 +161,7 @@ The current pipeline processes data in memory and would not scale to terabytes o
 
 *   **Algorithmic Optimization:** Most of the functions we're using use a fairly naive approach and do not optimize for time and space complexity. If we were to have large datasets, we would need to seek those marginal gains.
 
+
 ## SQL Queries for Sales Analysis
 
 This project includes SQL queries designed for analyzing sales data from the `TRANSACTIONS` and `PRODUCT_NOMENCLATURE` tables, as specified in Part II of the technical test. These queries are written for Google BigQuery and can be found in the `queries/` directory.
@@ -180,3 +186,15 @@ This project includes SQL queries designed for analyzing sales data from the `TR
 **Assumptions for SQL Queries:**
 *   Tables are named `transactions` and `product_nomenclature` (or fully qualified paths).
 *   Relevant columns (`date`, `prod_price`, `prod_qty`, `product_type`) exist with appropriate data types.
+
+Below are example outputs for the SQL queries.
+
+#### Daily Revenue Results (`queries/daily_revenue.sql` - Option 1)
+![Daily Revenue SQL Query Results](assets/question1option1.png)
+
+#### Daily Revenue Results (`queries/daily_revenue.sql` - Option 2)
+![Daily Revenue SQL Query Results](assets/question1option2.png)
+
+#### Sale Type per User Results (`queries/daily_revenue.sql`)
+![Sale Type per User SQL Query Results](assets/question2.png)
+
