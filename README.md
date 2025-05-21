@@ -101,6 +101,9 @@ Below is an example output for the pipeline (along with the adhoc queries).
 #### Pipeline Run Results
 ![Pipeline Run Results](assets/run_log.png)
 
+#### Resulting JSON file
+![Resulting JSON file](assets/json.png)
+
 # Data Quality Considerations & Handling
 
 This pipeline incorporates several strategies to handle inconsistencies and potential issues in the input data:
