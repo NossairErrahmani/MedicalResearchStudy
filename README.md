@@ -187,7 +187,7 @@ This project includes SQL queries designed for analyzing sales data from the `TR
 *   Tables are named `transactions` and `product_nomenclature` (or fully qualified paths).
 *   Relevant columns (`date`, `prod_price`, `prod_qty`, `product_type`) exist with appropriate data types.
 
-Below are example outputs for the SQL queries.
+Below are example outputs for the SQL queries (I used the Test Document sample data, modifying the year to 2019 to comply with the filter).
 
 #### Daily Revenue Results (`queries/daily_revenue.sql` - Option 1)
 ![Daily Revenue SQL Query Results](assets/question1option1.png)
