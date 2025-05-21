@@ -137,6 +137,7 @@ This pipeline incorporates several strategies to handle inconsistencies and pote
 -   **Approach**:
     -   Files are generally opened with `encoding='utf-8'`.
     -   For CSV files potentially containing a BOM (like `clinical_trials.csv`), `encoding='utf-8-sig'` is used to correctly handle it.
+    -   A second, regex-based transformation is made thereafter to ensure no trailing badly encoded characters remain.
     -   Output JSON is written with `ensure_ascii=False` to preserve non-ASCII characters correctly.
 -   **Relevant Code**: File opening statements in `data_loader.py`, `json.dump` in `main.py`.
 

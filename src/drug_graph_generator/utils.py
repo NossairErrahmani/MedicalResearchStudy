@@ -51,7 +51,6 @@ def parse_date(date_str: Optional[str]) -> str:
     if not processed_date_str: # Check if it became empty after processing
         return UNKNOWN_DATE_PLACEHOLDER
 
-
     # Order of formats can be important for ambiguous dates like "01/02/03".
     # DD/MM/YYYY is prioritized for slash-separated dates.
     formats_to_try: List[str] = [

@@ -30,8 +30,3 @@ OUTPUT_JSON_FILE: str = os.path.join(OUTPUT_DIR, "drug_mentions_graph.json")
 # Used when original data is missing or cannot be processed.
 UNKNOWN_JOURNAL_PLACEHOLDER: str = "unknown_journal"
 UNKNOWN_DATE_PLACEHOLDER: str = "UNKNOWN_DATE"
-
-# --- Logging Configuration (Optional - can also be in main.py or a dedicated logging_config.py) ---
-# Example:
-# LOG_LEVEL: str = "INFO"
-# LOG_FORMAT: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

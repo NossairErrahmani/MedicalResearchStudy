@@ -9,6 +9,7 @@ import os
 import json
 import logging # Import the logging module
 from typing import List, Dict, Any # For type hinting loaded data
+from . import adhoc_queries # Import the adhoc_queries module
 
 # Relative imports for modules within the same package
 from . import config
@@ -84,6 +85,19 @@ def run_pipeline() -> None:
         logging.error(f"IOError: Could not write JSON to {config.OUTPUT_JSON_FILE}: {e}")
     except Exception as e:
         logging.error(f"An unexpected error occurred while saving JSON: {e}")
+
+    if graph:  # Ensure graph was successfully built
+        logging.info("\n--- Running Ad-hoc Queries on In-Memory Graph ---")
+
+        most_mentioned_journal = adhoc_queries.find_journal_with_most_unique_drugs(graph)
+
+        target_drug_for_adhoc = "atropine"
+
+        logging.info(f"Adhoc: Finding related drugs for: '{target_drug_for_adhoc}'")
+        related_drugs_set = adhoc_queries.find_related_drugs_by_pubmed_journals(graph, target_drug_for_adhoc)
+
+    else:
+        logging.error("Adhoc queries skipped as the graph was not successfully generated or is empty.")
 
     logging.info("Pipeline finished.")
 

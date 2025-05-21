@@ -8,6 +8,7 @@ downstream processing.
 import csv
 import json5  # For lenient parsing of pubmed.json
 import logging
+import re
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any, Set, Optional, Union  # Added Union for pub_id flexibility
 
@@ -219,11 +220,14 @@ class ClinicalTrialsCSVLoader(BaseDataLoader):
             with open(self.filepath, mode='r', encoding='utf-8-sig') as file:
                 reader: csv.DictReader = csv.DictReader(file)
                 for i, row in enumerate(reader):
+                    original_journal: Optional[str] = row.get('journal')
+                    # If we still have trailing characters like "\xc3\x28", we'll remove them with a regex
+                    cleaned_journal = re.sub(r'\\x[0-9a-fA-F]{2}', '', original_journal)
                     pub_entry: PublicationObject = self._create_publication_entry(
                         pub_id=row.get('id'),
                         title=row.get('scientific_title'),  # Field name specific to this source
                         original_title=row.get('scientific_title'),
-                        journal=row.get('journal'),
+                        journal=cleaned_journal,
                         date=row.get('date'),
                         source_type="clinical_trials_csv",
                         item_index=i
