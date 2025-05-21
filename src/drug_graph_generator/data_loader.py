@@ -86,7 +86,6 @@ class BaseDataLoader(ABC):
         pub_id_str: str = str(pub_id).strip() if pub_id is not None else ""
         if not pub_id_str:
             # Generate a unique placeholder ID using source_type and item_index
-            # The default_id_prefix was removed as it wasn't strictly necessary with item_index
             pub_id_str = f'{source_type}_item_{item_index}_no_id'
 
         normalized_journal: str = normalize_text(journal)

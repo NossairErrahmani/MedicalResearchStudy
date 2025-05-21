@@ -19,7 +19,7 @@ This project serves as a technical assessment.
   - [Text Normalization](#text-normalization)
   - [Character Encoding](#character-encoding)
   - [Drug Name Matching](#drug-name-matching)
-- [Future Considerations & Improvements](#future-considerations--improvements)
+- [Future Considerations & Improvements](#scalability)
 
 ## Project Objective
 
@@ -145,12 +145,12 @@ This pipeline incorporates several strategies to handle inconsistencies and pote
 -   **Approach**: Drug names and publication titles are normalized (lowercased). The `processing.build_drug_mention_graph` function uses regular expressions (`re.search` with `\b` word boundaries: `r'\b' + re.escape(drug_name) + r'\b'`) to match whole drug words within the normalized titles. `re.escape` is used to handle any special regex characters within drug names themselves.
 -   **Relevant Code**: `src/drug_graph_generator/processing.py` (`build_drug_mention_graph`).
 
-### Scalability: Handling Large Data Volumes (Terabytes / Millions of Files)
+### Scalability
 
 The current pipeline processes data in memory and would not scale to terabytes of data or millions of files. To handle such volumes, significant architectural changes would be necessary:
 
+*   **Iterative Processing & Orchestration:** For continuously arriving data or extremely large historical datasets, an iterative or streaming approach would be preferable over full re-computation. The overall pipeline would be orchestrated by a tool like Apache Airflow, managing the execution of distributed jobs (e.g., Spark applications) rather than a single Python script. Utility functions for normalization and parsing would be adapted for use within the distributed framework (e.g., as UDFs).
+
 *   **Distributed Processing & Storage:** The core modification would involve adopting a distributed processing framework like Apache Spark or Dask. Data ingestion would change from loading entire files into Python lists to distributed reading (e.g., `spark.read.csv()`). Input data and intermediate results would be stored in scalable systems like cloud object storage (S3, GCS, Azure Blob) or HDFS, ideally using analytics-optimized columnar formats like Apache Parquet.
 
-*   **Streamlined Mention Finding & Aggregation:** The current nested loop for finding drug mentions would be replaced with distributed operations. In Spark, this could involve using User Defined Functions (UDFs) or `flatMap` operations on distributed DataFrames to identify mentions, followed by distributed `groupBy` and aggregation operations to construct the graph structure. The final graph, if too large for a single JSON, might be output as partitioned data or loaded into a specialized database (e.g., a graph database or data warehouse).
-
-*   **Iterative Processing & Orchestration:** For continuously arriving data or extremely large historical datasets, an iterative or streaming approach would be preferable over full re-computation. The overall pipeline would be orchestrated by a tool like Apache Airflow, managing the execution of distributed jobs (e.g., Spark applications) rather than a single Python script. Utility functions for normalization and parsing would be adapted for use within the distributed framework (e.g., as UDFs).
+*   **Algorithmic Optimization:** Most of the functions we're using use a fairly naive approach and do not optimize for time and space complexity. If we were to have large datasets, we would need to seek those marginal gains.

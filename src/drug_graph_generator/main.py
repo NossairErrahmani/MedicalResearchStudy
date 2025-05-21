@@ -50,12 +50,13 @@ def run_pipeline() -> None:
     drugs_loader: DrugsLoader = DrugsLoader(config.DRUGS_FILE)
     drugs: List[str] = drugs_loader.load_data()
     if not drugs:
+        # No need to process the rest, as our graph will be blank
         logging.warning("No drugs loaded. Exiting pipeline.")
         return
     logging.info(f"Loaded {len(drugs)} unique drug names.")
 
     logging.info("Loading publications...")
-    # Assuming PublicationObject is the type alias for individual publication dicts
+    # PublicationObject is the type alias for individual publication dicts (see data_loader module)
     all_publications: List[PublicationObject] = load_all_publications_data(
         config.PUBMED_CSV_FILE,
         config.PUBMED_JSON_FILE,
@@ -87,7 +88,4 @@ def run_pipeline() -> None:
     logging.info("Pipeline finished.")
 
 if __name__ == "__main__":
-    # This allows running the main.py script directly for development/testing
-    # (e.g., python -m src.drug_graph_generator.main from project root)
-    # or if this script itself is the entry point of an installed package.
     run_pipeline()
