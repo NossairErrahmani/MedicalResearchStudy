@@ -155,3 +155,28 @@ The current pipeline processes data in memory and would not scale to terabytes o
 *   **Distributed Processing & Storage:** The core modification would involve adopting a distributed processing framework like Apache Spark or Dask. Data ingestion would change from loading entire files into Python lists to distributed reading (e.g., `spark.read.csv()`). Input data and intermediate results would be stored in scalable systems like cloud object storage (S3, GCS, Azure Blob) or HDFS, ideally using analytics-optimized columnar formats like Apache Parquet.
 
 *   **Algorithmic Optimization:** Most of the functions we're using use a fairly naive approach and do not optimize for time and space complexity. If we were to have large datasets, we would need to seek those marginal gains.
+
+## SQL Queries for Sales Analysis
+
+This project includes SQL queries designed for analyzing sales data from the `TRANSACTIONS` and `PRODUCT_NOMENCLATURE` tables, as specified in Part II of the technical test. These queries are written for Google BigQuery and can be found in the `queries/` directory.
+
+*   **`queries/daily_revenue.sql`**:
+    *   **Objective:** Calculates the total daily sales revenue (`ventes`) for the year 2019.
+    *   **Key Considerations & Logic:**
+        *   Two approaches are presented: one showing sales only for dates with transactions, and a preferred second option that ensures *all dates in 2019 are displayed*.
+        *   The second option achieves this by generating a complete 2019 date series and `LEFT JOIN`-ing it with aggregated daily sales. `COALESCE` is then used to present `0` revenue for dates without sales, providing a comprehensive daily view.
+        *   Filtering is applied for the year 2019 using `EXTRACT(YEAR FROM date)`.
+    *   **Expected Output Columns (for the comprehensive option):** `date`, `ventes`
+
+*   **`queries/sale_types_per_user.sql`**:
+    *   **Objective:** Determines the total sales for "MEUBLE" (furniture) and "DECO" (decoration) product types per client for the year 2019.
+    *   **Key Considerations & Logic:**
+        *   Utilizes a `LEFT JOIN` between `TRANSACTIONS` and `PRODUCT_NOMENCLATURE` to link sales to product types.
+        *   Employs conditional aggregation (`SUM(CASE WHEN ... END)`) to pivot sales into `ventes_meuble` and `ventes_deco` columns.
+        *   Critically, `COALESCE(..., 0)` is applied to these sums. This ensures that clients with sales in 2019 but none for a specific product type (e.g., no "MEUBLE" sales) will show `0` for that category, rather than `NULL`. This approach enhances data presentation and is robust for scenarios where one might `LEFT JOIN` from a `clients` dimension, ensuring all clients are represented even if they have no relevant transactions.
+        *   Filters for transactions within 2019 and groups results by `client_id`.
+    *   **Expected Output Columns:** `client_id`, `ventes_meuble`, `ventes_deco`
+
+**Assumptions for SQL Queries:**
+*   Tables are named `transactions` and `product_nomenclature` (or fully qualified paths).
+*   Relevant columns (`date`, `prod_price`, `prod_qty`, `product_type`) exist with appropriate data types.
